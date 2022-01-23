@@ -67,6 +67,9 @@ public class Solution {
 
     /**
      * Expands the given sieve of eratosthenes array by doubling it in size.
+     * <p><b>Note:</b> the values mean the opposite -> true if it is <b>not</b> a prime and false otherwise.
+     * That's due to the fact, that the default values after initializing an empty array are false and not true.
+     *
      * @param dp the old sieve of eratosthenes array.
      * @return a new sieve of eratosthenes array doubled by the size.
      */
