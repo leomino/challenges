@@ -26,8 +26,13 @@ package palomino.foobar.level_1;
 /**
  * Calculates a new 'bunny ID' by taking a 5 character long substring from a given index.
  * <p>The substring is taken from a calculated string with all prime numbers concatenated.
+ * <p>The calculation is based on Sieve of Eratosthenes.
+ *
+ * @since 2022-01-19
+ * @see <a href="https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes</a>
+ * @author Leonardo Palomino
  */
-public class Solution{
+public class Solution {
 
     /**
      * Retrieves the 5 digit long substring, beginning at the specified index (inclusive).
@@ -65,7 +70,7 @@ public class Solution{
      * @param dp the old sieve of eratosthenes array.
      * @return a new sieve of eratosthenes array doubled by the size.
      */
-    public static boolean[] expandSieveEratosthenesArray(boolean[]dp) {
+    private static boolean[] expandSieveEratosthenesArray(boolean[]dp) {
         int n = dp.length*2;
         boolean[] expanded = new boolean[n];
         for(int i = 0; i<dp.length; i++) {
