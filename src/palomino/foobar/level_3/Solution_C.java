@@ -25,142 +25,160 @@
 package palomino.foobar.level_3;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Solution_C {
 
-    private static class Transition {
-        Transition prev;
-        State from;
-        State to;
-        double probability = 1d;
-        double pathProbability = 1d;
-        HashSet<Integer> relatedStates = new HashSet<>();
-
-        public Transition(State initial, HashSet<Integer> relatedStates) {
-            this.to = initial;
-            this.relatedStates = relatedStates;
-        }
-
-        public Transition(Transition prev, HashSet<Integer> relatedStates, State from, State to, int[][] m) {
+    private static class Edge {
+        Edge prev;
+        int to;
+        double probability;
+        public Edge(Edge prev, int to, double probability) {
             this.prev = prev;
-            this.from = from;
-            this.relatedStates.addAll(relatedStates);
             this.to = to;
-            this.probability = (double) m[from.index][to.index] / from.sum;
-            this.pathProbability = prev.pathProbability * this.probability;
+            this.probability = probability;
         }
     }
 
     private static class State {
-        ArrayList<Integer> adjacentStates = new ArrayList<>();
-        HashSet<Integer> relatedStates = new HashSet<>();
-        int index;
-        int sum;
-        double staticProbability = 0;
-        double variableProbability = 0;
-
-        public State(int index) {
-            this.index = index;
-            this.sum = 0;
-        }
-
-        public double calculateProbability() {
-            return (1 / (1 - this.variableProbability)) * this.staticProbability;
+        LinkedList<Edge> terms;
+        double probability = 1;
+        public State() {
+            this.terms = new LinkedList<>();
         }
     }
 
     public static int[] solution(int[][] m) {
         int n = m.length;
+        double[][] probabilities = new double[n][n];
+        boolean[] terminal = new boolean[n];
         HashMap<Integer, State> states = new HashMap<>();
+        states.put(null, new State());
 
         for (int i = 0; i < n; i++) {
-            states.put(i, new State(i));
+            states.put(i, new State());
+            int sum = 0;
+            for (int j = 0; j < n; j++) {
+                sum += m[i][j];
+            }
+            if (sum == 0) {
+                terminal[i] = true;
+                continue;
+            }
             for (int j = 0; j < n; j++) {
                 if (m[i][j] > 0) {
-                    states.get(i).sum += m[i][j];
-                    states.get(i).adjacentStates.add(j);
+                    probabilities[i][j] = (double) m[i][j] / sum;
                 }
             }
         }
 
-        HashMap<Integer, Double> repeatingStates = new HashMap<>();
-        Queue<Transition> q = new LinkedList<>();
-        q.offer(new Transition(states.get(0), new HashSet<>()));
-
-        while (!q.isEmpty()) {
-            Transition curr = q.poll();
-
-            if (curr.to.adjacentStates.size() == 0) {
-                states.get(curr.to.index).staticProbability += curr.pathProbability;
-                states.get(curr.to.index).relatedStates = curr.relatedStates;
-                continue;
+        //BFS in-order traversal
+        LinkedList<Edge> traversal = new LinkedList<>();
+        LinkedList<Integer> toBeCalculated = new LinkedList<>();
+        Edge curr = new Edge(null, 0, 1);
+        traversal.offer(curr);
+        boolean[][] visited = new boolean[n][n];
+        while (!traversal.isEmpty()) {
+            curr = traversal.poll();
+            if (curr.prev == null) {
+                states.get(curr.to).terms.offer(curr);
+            } else {
+                if (visited[curr.prev.to][curr.to]) continue;
+                states.get(curr.to).terms.offer(curr);
+                visited[curr.prev.to][curr.to] = true;
             }
-
-            if (curr.relatedStates.contains(curr.to.index)) {
-                int repeatedIndex = curr.to.index;
-                double prob = 1;
-
-                do {
-                    prob *= curr.probability;
-                    curr = curr.prev;
-                } while(curr != null && curr.to.index != repeatedIndex);
-
-                if(repeatingStates.containsKey(repeatedIndex)) {
-                    repeatingStates.put(repeatedIndex, repeatingStates.get(repeatedIndex)+prob);
-                } else {
-                    repeatingStates.put(repeatedIndex, prob);
+            if (!terminal[curr.to]) toBeCalculated.offer(curr.to);
+            for (int j = 0; j < n; j++) {
+                if (m[curr.to][j] > 0) {
+                    traversal.offer(new Edge(curr, j, probabilities[curr.to][j]));
                 }
-                continue;
-            }
-            curr.relatedStates.add(curr.to.index);
-
-            for (Integer i : curr.to.adjacentStates) {
-                q.offer(new Transition(curr, curr.relatedStates, curr.to, states.get(i), m));
             }
         }
-
-        ArrayList<Double> probabilities = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            if (states.get(i).adjacentStates.size() == 0) {
-                State curr = states.get(i);
-                for (Entry<Integer, Double> rep : repeatingStates.entrySet()) {
-                    if (curr.relatedStates.contains(rep.getKey())) {
-                        curr.variableProbability += rep.getValue();
+            if (terminal[i]) toBeCalculated.offer(i);
+        }
+
+        HashSet<Integer> resolved = new HashSet<>();
+        State state;
+        int stateId;
+        while (!toBeCalculated.isEmpty()) {
+            stateId = toBeCalculated.poll();
+            if (!resolved.add(stateId)) continue;
+
+            state = states.get(stateId);
+            int counter = 0;
+            double product = 0;
+            double geometricSeries = 0;
+            Edge edge;
+            while (!state.terms.isEmpty()) {
+                edge = state.terms.poll();
+                if(counter++<1) {
+                    product = states.get(edge.prev != null ? edge.prev.to : null).probability * edge.probability;
+                    continue;
+                }
+                if(terminal[stateId]) {
+                    product += states.get(edge.prev.to).probability * edge.probability;
+                } else {
+                    double pathProbability = 1;
+                    double edgeProbability = edge.probability*states.get(edge.prev.to).probability;
+                    while (edge.prev != null) {
+                        pathProbability *= edge.probability;
+                        if (edge.to != stateId && !terminal[edge.to] && states.get(edge.to).terms.size() > 1 && edge.prev.to != stateId) {
+                            LinkedList<Edge> toBeMerged = states.get(edge.to).terms;
+                            states.get(edge.to).terms = new LinkedList<>();
+                            states.get(edge.to).terms.offer(toBeMerged.remove());
+                            state.terms.addAll(toBeMerged);
+                        }
+                        if (edge.prev.to == stateId) {
+                            geometricSeries += pathProbability;
+                            break;
+                        } else if(edge.prev.prev == null) {
+                            product += edgeProbability;
+                            break;
+                        }
+                        edge = edge.prev;
                     }
                 }
-                probabilities.add(curr.calculateProbability());
             }
+            state.probability = product * (1 / (1 - geometricSeries));
         }
-        return getResult(probabilities);
+
+        ArrayList<Double> p = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (!terminal[i]) continue;
+            p.add(states.get(i).probability);
+        }
+        return getResult(p);
     }
 
     public static int[] convertDecimalToFraction(double x) {
         double tolerance = 1.0E-6;
-        double h1=1; double h2=0;
-        double k1=0; double k2=1;
+        double h1 = 1;
+        double h2 = 0;
+        double k1 = 0;
+        double k2 = 1;
         double b = x;
         do {
             double a = Math.floor(b);
-            double aux = h1; h1 = a*h1+h2; h2 = aux;
-            aux = k1; k1 = a*k1+k2; k2 = aux;
-            b = 1/(b-a);
-        } while (Math.abs(x-h1/k1) > x*tolerance);
+            double aux = h1;
+            h1 = a * h1 + h2;
+            h2 = aux;
+            aux = k1;
+            k1 = a * k1 + k2;
+            k2 = aux;
+            b = 1 / (b - a);
+        } while (Math.abs(x - h1 / k1) > x * tolerance);
 
-        return new int[]{(int)h1, (int)k1};
+        return new int[]{(int) h1, (int) k1};
     }
 
     private static int[] getResult(List<Double> probabilities) {
         List<int[]> fractions = probabilities.stream().map(Solution_C::convertDecimalToFraction).collect(Collectors.toList());
-        int[] result = new int[probabilities.size()+1];
+        int[] result = new int[probabilities.size() + 1];
 
         int gcd = fractions.get(0)[1];
         for (int i = 0; i < fractions.size(); i++) {
@@ -168,68 +186,13 @@ public class Solution_C {
         }
 
         final int finalGcd = gcd;
-        Integer[] re = fractions.stream().map(f -> f[0]*=(finalGcd /f[1])).toArray(Integer[]::new);
+        Integer[] re = fractions.stream().map(f -> f[0] *= (finalGcd / f[1])).toArray(Integer[]::new);
 
-        for (int i = 0; i < result.length-1; i++) {
+        for (int i = 0; i < result.length - 1; i++) {
             result[i] = re[i];
         }
-        result[result.length-1] = gcd;
+        result[result.length - 1] = gcd;
 
         return result;
-    }
-
-    public static void main(String[] args) {
-        //standart beispiel
-        System.out.println(Arrays.toString(solution(new int[][]{
-                {0, 1, 0, 0, 0, 1},
-                {4, 0, 0, 3, 2, 0},
-                {0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0}
-        })));
-
-        //kreis betrifft nicht alle punkte
-        System.out.println(Arrays.toString(solution(new int[][]{
-                {0, 1, 1, 0, 0},
-                {0, 1, 0, 2, 0},
-                {0, 0, 0, 0, 0},
-                {0, 3, 0, 0, 1},
-                {0, 0, 0, 0, 0}
-        })));
-
-        //wiederholung im selben punkt + ein punkt mit mehreren statischen pfaden
-        System.out.println(Arrays.toString(solution(new int[][]{
-                {1, 1, 1, 0},
-                {0, 0, 0, 0},
-                {0, 1, 0, 1},
-                {0, 0, 0, 0},
-        })));
-
-        //große wiederholungs-schleife
-        System.out.println(Arrays.toString(solution(new int[][]{
-                {1, 1, 1, 0},
-                {1, 0, 0, 1},
-                {0, 0, 0, 0},
-                {0, 0, 0, 0}
-        })));
-
-        //nur ein punkt
-        System.out.println(Arrays.toString(solution(new int[][]{
-                {1, 1, 1, 0},
-                {1, 0, 0, 0},
-                {0, 0, 0, 0}
-        })));
-
-        //stress test
-        System.out.println(Arrays.toString(solution(new int[][]{
-                {1, 1, 0, 1, 1, 0, 0},
-                {1, 0, 1, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 1, 1},
-                {0, 0, 1, 0, 1, 0, 1},
-                {0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0},
-        })));
     }
 }
