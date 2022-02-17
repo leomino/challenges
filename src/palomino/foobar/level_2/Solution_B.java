@@ -26,7 +26,7 @@ package palomino.foobar.level_2;
 /**
  * Calculates the "gear radius" of a sequence of "peg locations".
  *
- * <p>The peg locations is a int[] of ascending Integers between 1 to 10.000, representing the locations from where the "gears" have to be placed.
+ * <p>The peg locations is a int[] of ascending Integers between 1 and 10.000, representing the locations from where the "gears" have to be placed.
  * A gear must touch but must not collide with the adjacent gear to it's right.
  * A gear with a size of at least 2 must be placed at each peg-location.
  * <p>The Problem: The first gear has to be exactly twice in size as the last gear.
@@ -45,10 +45,9 @@ public class Solution_B {
 
     /**
      * Calculates the last gear's radius and validates it to the constraints of each gear radius to be at least 1 and gears not to overlap.
-     *
-     * Based on the formula: lastGears radius = A-B+C-D+E-F...(+|-)N
-     *
-     * where A...N are the distances -> D(n) = pegs[n]-pegs[n-1]
+     * <p>Based on the formula:
+     * <p><b>lastGears radius = A-B+C-D+E-F...(+|-)N</b> where <b>A...N</b> are the distances:
+     * <p><b>D(n) = pegs[n]-pegs[n-1]</b>
      * <p>Note: when there is a even amount of points in pegs, the last Distance N always results to be added to the sum with a plus sign,
      * while otherwise it always results to be added with a minus sign.
      *
@@ -76,9 +75,7 @@ public class Solution_B {
 
     /**
      * Validates if all gears are at least two in length (the radius must be greater or equal to 1).
-     *
-     * Based on the formula: gearRadius(x) = -2x+A-B+C-D...(+|-)N
-     *
+     * <p>Based on the formula: <b>gearRadius(x) = -2x+A-B+C-D...(+|-)N</b>
      * @param lastRadius the calculated last gear's radius
      * @param pegs the peg locations as int[]
      * @return true if all gears align the constraints, false otherwise.
