@@ -21,41 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package palomino.codejam.qualification;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Scanner;
+package palomino.leetcode.easy;
 
 /**
- * Calculates the longest straight which can be formed using dice.
- * @since 2022-04-01
- * @see <a href="https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a46471">d1000000</a>
+ * Given head, the head of a linked list, determine if the linked list has a cycle in it.
+ * <p>There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer.
+ * Internally, pos is used to denote the index of the node that tail's next pointer is connected to.
+ * <b>Note that pos is not passed as a parameter.</b>
+ * <p>Return true if there is a cycle in the linked list. Otherwise, return false.
  * @author Leonardo Palomino
+ * @since 2022-04-01
+ * @see <a href="https://leetcode.com/problems/linked-list-cycle">LeetCode</a>
  */
-public class C {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int t = in.nextInt();
-        for (int i = 1; i <= t; ++i) {
-            int N = in.nextInt();
-            int[] dice = new int[N];
-            for (int j = 0; j < N; j++) {
-                dice[j] = in.nextInt();
-            }
-            Arrays.sort(dice);
-
-            int count = 0;
-            int last = 1;
-            for (int j = 0; j < N; j++) {
-                if (dice[j] >= last) {
-                    ++count;
-                    ++last;
-                }
-            }
-
-            System.out.println("Case #" + i + ": " + count);
+public class LinkedListCycle {
+    /**
+     * Definition for singly-linked list.
+     */
+    class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int x) {
+            val = x;
+            next = null;
         }
+    }
+
+    public boolean hasCycle(ListNode head) {
+        while(head.next != null) {
+            if (head.val == Integer.MAX_VALUE) return true;
+            head.val = Integer.MAX_VALUE;
+            head = head.next;
+        }
+        return false;
     }
 }

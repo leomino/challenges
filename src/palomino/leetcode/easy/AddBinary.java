@@ -21,41 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package palomino.codejam.qualification;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Scanner;
+package palomino.leetcode.easy;
 
 /**
- * Calculates the longest straight which can be formed using dice.
- * @since 2022-04-01
- * @see <a href="https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a46471">d1000000</a>
+ * Given two binary strings a and b, return their sum as a binary string.
  * @author Leonardo Palomino
+ * @since 2022-04-01
+ * @see <a href="https://leetcode.com/problems/add-binary">LeetCode</a>
  */
-public class C {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int t = in.nextInt();
-        for (int i = 1; i <= t; ++i) {
-            int N = in.nextInt();
-            int[] dice = new int[N];
-            for (int j = 0; j < N; j++) {
-                dice[j] = in.nextInt();
-            }
-            Arrays.sort(dice);
+public class AddBinary {
 
-            int count = 0;
-            int last = 1;
-            for (int j = 0; j < N; j++) {
-                if (dice[j] >= last) {
-                    ++count;
-                    ++last;
-                }
-            }
+    public static String addBinary(String a, String b) {
+        StringBuilder sb = new StringBuilder();
+        int stack = 0;
+        int i = a.length()-1;
+        int j = b.length()-1;
 
-            System.out.println("Case #" + i + ": " + count);
+        while(i >= 0 || j >= 0) {
+            int sum = stack;
+            if(i>=0) sum+=a.charAt(i--)-'0';
+            if(j>=0) sum+=b.charAt(j--)-'0';
+            stack = sum > 1 ? 1 : 0;
+            sb.append(sum%2);
         }
+
+        if(stack > 0) sb.append(1);
+
+        return sb.reverse().toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(addBinary("11", "1"));
     }
 }

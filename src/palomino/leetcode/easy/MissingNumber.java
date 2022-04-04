@@ -21,41 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package palomino.codejam.qualification;
+package palomino.leetcode.easy;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
 
 /**
- * Calculates the longest straight which can be formed using dice.
- * @since 2022-04-01
- * @see <a href="https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a46471">d1000000</a>
+ * Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
+ *
  * @author Leonardo Palomino
+ * @see <a href="https://leetcode.com/problems/missing-number">LeetCode</a>
+ * @since 2022-04-01
  */
-public class C {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int t = in.nextInt();
-        for (int i = 1; i <= t; ++i) {
-            int N = in.nextInt();
-            int[] dice = new int[N];
-            for (int j = 0; j < N; j++) {
-                dice[j] = in.nextInt();
-            }
-            Arrays.sort(dice);
-
-            int count = 0;
-            int last = 1;
-            for (int j = 0; j < N; j++) {
-                if (dice[j] >= last) {
-                    ++count;
-                    ++last;
-                }
-            }
-
-            System.out.println("Case #" + i + ": " + count);
+public class MissingNumber {
+    public static int binary(int[] nums) {
+        Arrays.sort(nums);
+        int left = 0, right = nums.length, mid= (left + right)/2;
+        while(left<right){
+            mid = (left + right)/2;
+            if(nums[mid]>mid) right = mid;
+            else left = mid+1;
         }
+        return left;
+    }
+
+    public static int missingNumber(int[] nums) {
+        int sum = (int) (((float) 1 + nums.length) / 2 * nums.length);
+        return sum - Arrays.stream(nums).sum();
+    }
+
+    public static void main(String[] args) {
+//        System.out.println(missingNumber(new int[]{0, 1}));
+        System.out.println(binary(new int[]{0, 1, 2, 3, 4, 5, 6, 8, 9, 10}));
     }
 }

@@ -21,41 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package palomino.codejam.qualification;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Scanner;
+package palomino.leetcode.easy;
 
 /**
- * Calculates the longest straight which can be formed using dice.
- * @since 2022-04-01
- * @see <a href="https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a46471">d1000000</a>
+ * Write a function that reverses a string. The input string is given as an array of characters s.
+ * You must do this by modifying the input array in-place with O(1) extra memory.
  * @author Leonardo Palomino
+ * @since 2022-04-01
+ * @see <a href="https://leetcode.com/problems/reverse-string/">LeetCode</a>
  */
-public class C {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int t = in.nextInt();
-        for (int i = 1; i <= t; ++i) {
-            int N = in.nextInt();
-            int[] dice = new int[N];
-            for (int j = 0; j < N; j++) {
-                dice[j] = in.nextInt();
-            }
-            Arrays.sort(dice);
+public class ReverseString {
+    public void reverseString(char[] s) {
+        int a = s.length-1;
+        int b = 0;
 
-            int count = 0;
-            int last = 1;
-            for (int j = 0; j < N; j++) {
-                if (dice[j] >= last) {
-                    ++count;
-                    ++last;
-                }
-            }
+        int i = 0;
+        while(a > b) {
+            char tmp = s[a];
+            s[a] = s[b];
+            s[b] = tmp;
 
-            System.out.println("Case #" + i + ": " + count);
+            a = s.length-1-++i;
+            b = s.length-1-a;
         }
     }
 }

@@ -21,41 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package palomino.codejam.qualification;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Scanner;
-
+package palomino.leetcode.easy;
 /**
- * Calculates the longest straight which can be formed using dice.
- * @since 2022-04-01
- * @see <a href="https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a46471">d1000000</a>
+ * Given the head of a sorted linked list, delete all duplicates such that each element appears only once.
+ * <p>Return the linked list sorted as well.
  * @author Leonardo Palomino
+ * @since 2022-04-01
+ * @see <a href="https://leetcode.com/problems/remove-duplicates-from-sorted-list">LeetCode</a>
  */
-public class C {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int t = in.nextInt();
-        for (int i = 1; i <= t; ++i) {
-            int N = in.nextInt();
-            int[] dice = new int[N];
-            for (int j = 0; j < N; j++) {
-                dice[j] = in.nextInt();
-            }
-            Arrays.sort(dice);
+public class RemoveFromSortedList {
 
-            int count = 0;
-            int last = 1;
-            for (int j = 0; j < N; j++) {
-                if (dice[j] >= last) {
-                    ++count;
-                    ++last;
-                }
-            }
+    /**
+     * Definition for singly-linked list.
+     */
+    public static class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
 
-            System.out.println("Case #" + i + ": " + count);
+    public static ListNode deleteDuplicates(ListNode head) {
+        ListNode result = new ListNode(head.val);
+        ListNode resultHead = result;
+        ListNode curr = head.next;
+
+        while(curr != null) {
+            if(curr.val != result.val) {
+                result.next = new ListNode(curr.val);
+                result = result.next;
+            }
+            curr = curr.next;
         }
+
+        return resultHead;
     }
 }

@@ -21,41 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package palomino.codejam.qualification;
+package palomino.leetcode.easy;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Scanner;
 
 /**
- * Calculates the longest straight which can be formed using dice.
- * @since 2022-04-01
- * @see <a href="https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a46471">d1000000</a>
+ * Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+ * <p>You must implement a solution with a linear runtime complexity and use only constant extra space.
  * @author Leonardo Palomino
+ * @since 2022-04-01
+ * @see <a href="https://leetcode.com/problems/single-number">LeetCode</a>
  */
-public class C {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int t = in.nextInt();
-        for (int i = 1; i <= t; ++i) {
-            int N = in.nextInt();
-            int[] dice = new int[N];
-            for (int j = 0; j < N; j++) {
-                dice[j] = in.nextInt();
-            }
-            Arrays.sort(dice);
-
-            int count = 0;
-            int last = 1;
-            for (int j = 0; j < N; j++) {
-                if (dice[j] >= last) {
-                    ++count;
-                    ++last;
-                }
-            }
-
-            System.out.println("Case #" + i + ": " + count);
-        }
+public class SingleNumber {
+    /**
+     * Every duplicate terminates itself with the XOR Operator.
+     * <p>So only the single occurring number will be left.
+     * @param nums the number array to be checked.
+     * @return the single occurring number.
+     */
+    public int singleNumber(int[] nums) {
+        return Arrays.stream(nums).reduce((a, b) -> a^b).getAsInt();
     }
 }
