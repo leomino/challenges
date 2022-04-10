@@ -21,53 +21,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package palomino.codejam.qualification;
+
+package palomino.kickstart.y_2021.round_b;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
-/**
- * Calculates the amount per color needed from four different printers to form a color consisting of at least 1.000.000 units of ink.
- * <p><b>Note:</b> could also be impossible if the given printers don't have enough ink.
- * @since 2022-04-01
- * @see <a href="https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a4672b">3D Printing</a>
- * @author Leonardo Palomino
- */
-public class B {
+
+public class LongestProgression {
     public static void main(String[] args) {
         Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
         int t = in.nextInt();
         for (int i = 1; i <= t; ++i) {
-            int max = 1000000;
-            int[][] printers = new int[3][4];
-            int[] constraints = new int[4];
 
-            for (int r = 0; r < 3; r++) {
-                for (int c = 0; c < 4; c++) {
-                    int next = in.nextInt();
-                    constraints[c] = r == 0 ? next : Math.min(constraints[c], next);
-                    printers[r][c] = next;
-                }
+            int N = in.nextInt();
+
+            if(N <= 2) {
+                System.out.println("Case #" + i + ": " + N);
+                break;
             }
 
-            if (Arrays.stream(constraints).sum() < max) {
-                System.out.println("Case #" + i + ": IMPOSSIBLE");
-                continue;
+            int[] arr = new int[N];
+            for (int j = 0; j < N; j++) {
+                arr[j] = in.nextInt();
             }
 
-            String[] res = new String[4];
-            for (int j = 0; j < 4; j++) {
-                if(max <= 0) {
-                    res[j] = "0";
+            int[] diffs = new int[N-1];
+            for (int j = 0; j < diffs.length; j++) {
+                diffs[j] = arr[j+1]-arr[j];
+            }
+
+            int last = diffs[0];
+            Map<Integer, List<Integer>> hm = new HashMap<>();
+            List<Integer> l = new ArrayList<>();
+            l.add(0);
+            hm.put(last, l);
+            for (int j = 1; j < diffs.length; j++) {
+                if(last == diffs[j]) {
+                    hm.get(last).add(j);
                 } else {
-                    res[j] = constraints[j] >= max ? max + "" : constraints[j] + "";
-                    max-=constraints[j];
+                    hm.put(diffs[j], new ArrayList<>());
                 }
-
             }
 
-            System.out.println("Case #" + i + ": " + String.join(" ", res));
+            System.out.println("Case #" + i + ": ");
         }
     }
 }

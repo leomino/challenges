@@ -21,41 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package palomino.codejam.qualification;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+package palomino.leetcode.medium;
+
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * Calculates the longest straight which can be formed using dice.
- * @since 2022-04-01
- * @see <a href="https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a46471">d1000000</a>
- * @author Leonardo Palomino
- */
-public class C {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int t = in.nextInt();
-        for (int i = 1; i <= t; ++i) {
-            int N = in.nextInt();
-            int[] dice = new int[N];
-            for (int j = 0; j < N; j++) {
-                dice[j] = in.nextInt();
-            }
-            Arrays.sort(dice);
-
-            int count = 0;
-            int last = 1;
-            for (int j = 0; j < N; j++) {
-                if (dice[j] >= last) {
-                    ++count;
-                    ++last;
-                }
-            }
-
-            System.out.println("Case #" + i + ": " + count);
+public class SubSets {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> numsList = Arrays.stream(nums).boxed().collect(Collectors.toList());
+        /*
+         *
+         * 1, 2, 3, 4, 5, 6
+         *
+         */
+        for(int i = 0; i<nums.length; i++) {
+            result.add(numsList.subList(i, numsList.size()));
+            result.add(numsList.subList(0, i));
+            result.add(numsList.subList(i, i+1));
         }
+
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 0; j < nums.length; j++) {
+                if(i == j) continue;
+                result.add(new ArrayList<>(Arrays.asList(nums[i], nums[j])));
+            }
+        }
+
+        return result;
     }
 }
