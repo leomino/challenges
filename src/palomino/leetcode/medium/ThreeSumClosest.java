@@ -21,41 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package palomino.codejam.qualification;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+package palomino.leetcode.medium;
+
 import java.util.Arrays;
-import java.util.Scanner;
 
 /**
- * Calculates the longest straight which can be formed using dice.
- * @since 2022-04-01
- * @see <a href="https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a46471">d1000000</a>
+ * Returns the sum of three distinct integers of a given array, closest to a target int.
+ * @since 2022-04-06
  * @author Leonardo Palomino
+ * @see <a href="https://leetcode.com/problems/3sum-closest/">3 Sum Closest</a>
  */
-public class C {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int t = in.nextInt();
-        for (int i = 1; i <= t; ++i) {
-            int N = in.nextInt();
-            int[] dice = new int[N];
-            for (int j = 0; j < N; j++) {
-                dice[j] = in.nextInt();
-            }
-            Arrays.sort(dice);
+public class ThreeSumClosest {
+    public int threeSumClosest(int[] nums, int target) {
+        Arrays.sort(nums);
 
-            int count = 0;
-            int last = 1;
-            for (int j = 0; j < N; j++) {
-                if (dice[j] >= last) {
-                    ++count;
-                    ++last;
+        int min, max, currDiff, last = Integer.MAX_VALUE;
+        Integer closest = null;
+        for(int i = 0; i<nums.length; i++) {
+            min = i+1;
+            max =nums.length-1;
+
+            while(min<max) {
+                int curr = nums[i]+nums[min]+nums[max];
+                currDiff = Math.max(curr, target)-Math.min(curr, target);
+                if(curr>target) {
+                    --max;
+                } else if(curr<target) {
+                    ++min;
+                } else {
+                    return target;
+                }
+                if(currDiff < last) {
+                    closest = curr;
+                    last = currDiff;
                 }
             }
-
-            System.out.println("Case #" + i + ": " + count);
         }
+        return closest;
     }
 }

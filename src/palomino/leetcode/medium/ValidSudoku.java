@@ -21,41 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package palomino.codejam.qualification;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Scanner;
+package palomino.leetcode.medium;
 
-/**
- * Calculates the longest straight which can be formed using dice.
- * @since 2022-04-01
- * @see <a href="https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a46471">d1000000</a>
- * @author Leonardo Palomino
- */
-public class C {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
-        int t = in.nextInt();
-        for (int i = 1; i <= t; ++i) {
-            int N = in.nextInt();
-            int[] dice = new int[N];
-            for (int j = 0; j < N; j++) {
-                dice[j] = in.nextInt();
-            }
-            Arrays.sort(dice);
+public class ValidSudoku {
+    public static boolean isValidSudoku(char[][] board) {
+        int[] validate = new int[27];
+        int box_c = 0;
+        int box_r;
+        for(int i = 0; i<9; i++) {
+            box_r = i*3%9;
+            if(i> 0 && i%3 == 0) ++box_c;
 
-            int count = 0;
-            int last = 1;
-            for (int j = 0; j < N; j++) {
-                if (dice[j] >= last) {
-                    ++count;
-                    ++last;
+            for (int j = 0; j < 9; j++) {
+                if(j>0 && j%3 == 0) ++box_r;
+
+                char curr_r = board[i][j];
+                char curr_c = board[j][i];
+                char curr_b = board[box_r][j%3+box_c*3];
+
+                if (curr_r != '.') {
+                    if(validate[curr_r-'0'-1]==i+1) return false;
+                    validate[curr_r - '0'-1] = i+1;
+                }
+                if (curr_c != '.') {
+                    if(validate[curr_c-'0'+8]==i+1) return false;
+                    validate[curr_c - '0'+8] = i+1;
+                }
+                if (curr_b != '.') {
+                    if(validate[curr_b-'0'+17]==i+1) return false;
+                    validate[curr_b - '0'+17] = i+1;
                 }
             }
-
-            System.out.println("Case #" + i + ": " + count);
         }
+        return true;
     }
 }
