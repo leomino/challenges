@@ -1,51 +1,11 @@
 package palomino.leetcode.medium;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Set;
 
 public class ThreeSum {
     public static List<List<Integer>> threeSum(int[] num) {
-//        Map<Integer, Integer> m = new HashMap<>();
-//        Map<Integer, Set<Integer>> added = new HashMap<>();
-//
-//        for(int i = 0; i<nums.length; i++) {
-//            m.put(nums[i], i);
-//        }
-//
-//        List<List<Integer>> res = new ArrayList<>();
-//        for(int i = 0; i<nums.length; i++) {
-//            for(int j = 0; j<nums.length; j++) {
-//                if(i == j) continue;
-//                int sought = (nums[i]+nums[j])*-1;
-//
-//                if(m.containsKey(sought) && m.get(sought) != i && m.get(sought) != j) {
-//                    PriorityQueue<Integer> subjects = new PriorityQueue<>();
-//                    subjects.offer(nums[i]);
-//                    subjects.offer(nums[j]);
-//                    subjects.offer(sought);
-//
-//                    int key = subjects.poll();
-//                    if(added.containsKey(key) && added.get(key).contains(subjects.peek())) continue;
-//
-//                    res.add(Arrays.asList(nums[i], nums[j], sought));
-//
-//                    if(added.containsKey(key)) {
-//                        added.get(key).addAll(Arrays.asList(subjects.poll(), subjects.poll()));
-//                    } else {
-//                        added.put(key, new HashSet<>(Arrays.asList(subjects.poll(), subjects.poll())));
-//                    }
-//                }
-//            }
-//        }
-//
-//        return res;
         Arrays.sort(num);
         List<List<Integer>> res = new LinkedList<>();
         for (int i = 0; i < num.length-2; i++) {
