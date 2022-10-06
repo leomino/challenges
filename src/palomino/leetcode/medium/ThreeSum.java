@@ -1,4 +1,4 @@
-package palomino.leetcode.easy.medium;
+package palomino.leetcode.medium;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package palomino.leetcode.easy.medium;
+package palomino.leetcode.medium;
 
 public class UniquePaths {
     public static int uniquePaths(int m, int n) {
