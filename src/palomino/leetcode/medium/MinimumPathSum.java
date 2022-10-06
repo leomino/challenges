@@ -1,7 +1,6 @@
 package palomino.leetcode.medium;
 
 public class MinimumPathSum {
-    int min = Integer.MAX_VALUE;
     public static int recursion(int[][] mat, int i, int j, int m, int n, int[][] grid){
         if(mat[i][j] > 0){
             return mat[i][j];
