@@ -1,4 +1,4 @@
-package palomino.leetcode.easy;
+package palomino.leetcode.medium;
 
 import palomino.leetcode.data.TreeNode;
 
