@@ -1,6 +1,6 @@
 package palomino.leetcode.easy;
 
-import palomino.leetcode.data.TreeNode;
+import palomino.data.TreeNode;
 
 public class PathSum {
     public static boolean hasPathSum(TreeNode root, int targetSum) {

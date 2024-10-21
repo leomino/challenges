@@ -1,8 +1,7 @@
 package palomino.leetcode.medium;
 
-import palomino.leetcode.data.ListNode;
+import palomino.data.ListNode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DeleteNodesFromLinkedList {
     public static ListNode modifiedList(int[] nums, ListNode head) {

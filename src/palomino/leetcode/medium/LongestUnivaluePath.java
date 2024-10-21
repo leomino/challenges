@@ -1,5 +1,5 @@
 package palomino.leetcode.medium;
-import palomino.leetcode.data.TreeNode;
+import palomino.data.TreeNode;
 
 public class LongestUnivaluePath {
     Integer longestPath = 0;

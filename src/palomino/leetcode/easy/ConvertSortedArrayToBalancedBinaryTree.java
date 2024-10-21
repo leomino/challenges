@@ -1,6 +1,6 @@
 package palomino.leetcode.easy;
 
-import palomino.leetcode.data.TreeNode;
+import palomino.data.TreeNode;
 
 /**
  * Given two binary strings a and b, return their sum as a binary string.

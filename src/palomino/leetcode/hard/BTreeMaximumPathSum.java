@@ -1,6 +1,6 @@
 package palomino.leetcode.hard;
 
-import palomino.leetcode.data.TreeNode;
+import palomino.data.TreeNode;
 
 public class BTreeMaximumPathSum {
     static Integer longestPath = Integer.MIN_VALUE;

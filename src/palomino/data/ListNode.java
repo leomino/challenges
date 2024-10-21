@@ -1,4 +1,4 @@
-package palomino.leetcode.data;
+package palomino.data;
 
 public class ListNode {
     public int val;

@@ -1,5 +1,5 @@
 package palomino.leetcode.easy;
-import palomino.leetcode.data.TreeNode;
+import palomino.data.TreeNode;
 
 public class IsTheBalancedBinaryTreeHeightBalanced {
     public boolean isBalanced(TreeNode root) {
